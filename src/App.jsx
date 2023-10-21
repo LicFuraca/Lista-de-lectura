@@ -6,7 +6,9 @@ import BookList from './components/BookList'
 function App() {
     return (
         <BooksContextProvider>
-            <div className='container'>
+            <div
+                className='container'
+                style={{ minHeight: '100vh' }}>
                 <div className='row'>
                     <div className='col-md-8'>
                         <BookList />
