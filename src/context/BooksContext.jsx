@@ -5,13 +5,17 @@ export const BooksContext = createContext()
 
 export const BooksContextProvider = ({ children }) => {
     const [library, setLibrary] = useState([])
+    const [filteredBooks, setFilteredBooks] = useState([])
     const [selectedReadingList, setSelectedReadingList] = useState([])
-    // const [filteredBooks, setFilteredBooks] = useState([])
 
     const fetchLibrary = useCallback(url => {
         fetch(url)
             .then(res => res.json())
-            .then(data => setLibrary(Object.values(data.library)))
+            .then(data => {
+                const library = Object.values(data.library)
+                setLibrary(library)
+                setFilteredBooks(library)
+            })
             .catch(error => console.log('Error al cargar JSON', error))
     }, [])
 
@@ -27,14 +31,18 @@ export const BooksContextProvider = ({ children }) => {
         }
     }
 
-    // const filterBooks = (genre = 'Todos', books = library) => {
-    //     genre === 'Todos'
-    //         ? setFilteredBooks(books)
-    //         : books.filter(bookObj => setFilteredBooks(bookObj.book.genre === genre))
-    // }
+    const filterBooks = genre => {
+        if (genre !== 'Todos') {
+            const newFilteredBooks = library.filter(books => books.book.genre === genre)
+
+            if (newFilteredBooks.length > 0) setFilteredBooks(newFilteredBooks)
+        } else {
+            setFilteredBooks(library)
+        }
+    }
 
     return (
-        <BooksContext.Provider value={{ library, selectedReadingList, selectedBookHandler }}>
+        <BooksContext.Provider value={{ filteredBooks, selectedReadingList, selectedBookHandler, filterBooks }}>
             {children}
         </BooksContext.Provider>
     )
