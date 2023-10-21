@@ -10,7 +10,9 @@ const BookList = () => {
     return (
         <>
             <h2>Lista de Libros</h2>
-            <SelectFilter />
+            <div className='row mb-4'>
+                <SelectFilter />
+            </div>
             <div className='row'>
                 {filteredBooks.length === 0
                     ? 'Cargando libros...'

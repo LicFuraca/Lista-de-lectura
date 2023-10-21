@@ -6,7 +6,7 @@ const SelectFilter = () => {
     const genders = ['Todos', 'Fantasía', 'Terror', 'Ciencia ficción', 'Zombies']
 
     return (
-        <div className='col-md-3'>
+        <div className='col-md-4'>
             <select
                 name='gender'
                 id='gender'

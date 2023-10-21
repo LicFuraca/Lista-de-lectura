@@ -7,7 +7,7 @@ const ReadingList = () => {
 
     return (
         <>
-            <h2 className='mb-md-5'>Lista de lectura</h2>
+            <h2 className='mb-4'>Lista de lectura</h2>
             <div className='card'>
                 <div className='card-body mx-auto'>
                     {selectedReadingList.length === 0
