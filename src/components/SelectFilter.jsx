@@ -2,15 +2,19 @@ import { useContext } from 'react'
 import { BooksContext } from '../context/BooksContext'
 
 const SelectFilter = () => {
-    const { filterBooks } = useContext(BooksContext)
+    const { changeFilter } = useContext(BooksContext)
     const genders = ['Todos', 'Fantasía', 'Terror', 'Ciencia ficción', 'Zombies']
+
+    const handleFilterChange = event => {
+        changeFilter(event.target.value)
+    }
 
     return (
         <div className='col-md-4'>
             <select
                 name='gender'
                 id='gender'
-                onChange={() => filterBooks(event.target.value)}>
+                onChange={handleFilterChange}>
                 {genders.map((gender, index) => (
                     <option
                         key={index}

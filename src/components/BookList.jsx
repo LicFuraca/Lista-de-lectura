@@ -10,12 +10,17 @@ const BookList = () => {
     return (
         <>
             <h2>Lista de Libros</h2>
-            <div className='row mb-4'>
+            <div className='row mb-4 '>
                 <SelectFilter />
             </div>
             <div className='row'>
+                <p className='text-start'>
+                    libros disponibles: <span>{filteredBooks.length}</span>
+                </p>
+            </div>
+            <div className='row'>
                 {filteredBooks.length === 0
-                    ? 'Cargando libros...'
+                    ? 'Sin libros...'
                     : filteredBooks.map(bookObj => (
                           <Book
                               key={bookObj.book.ISBN}
