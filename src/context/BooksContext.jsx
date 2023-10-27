@@ -10,29 +10,36 @@ export const BooksContextProvider = ({ children }) => {
     const [selectedFilter, setSelectedFilter] = useState('Todos')
 
     const fetchLibrary = useCallback(url => {
-        fetch(url)
-            .then(res => res.json())
-            .then(data => {
-                const library = Object.values(data.library)
-                setLibrary(library)
-                setFilteredBooks(library)
-            })
-            .catch(error => console.log('Error al cargar JSON', error))
+        const storedLibrary = localStorage.getItem('library')
+
+        if (storedLibrary) {
+            setLibrary(JSON.parse(storedLibrary))
+            setFilteredBooks(JSON.parse(storedLibrary))
+        } else {
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    const libraryData = Object.values(data.library)
+                    setLibrary(libraryData)
+                    localStorage.setItem('library', JSON.stringify(libraryData))
+                })
+                .catch(error => console.log('Error al cargar JSON', error))
+        }
     }, [])
 
     useEffect(() => {
         fetchLibrary('../../books.json')
     }, [fetchLibrary])
 
-    const updateReadingList = (readingList, library) => {
+    const updateReadingList = (readingList, bookList) => {
         let readingListStr = readingList.map(book => JSON.stringify(book))
-        let updatedLibrary = library.filter(bookObj => !readingListStr.includes(JSON.stringify(bookObj.book)))
+        let updatedLists = bookList.filter(bookObj => !readingListStr.includes(JSON.stringify(bookObj.book)))
 
-        return updatedLibrary
+        return updatedLists
     }
 
-    const selectedBookHandler = book => {
-        const newBook = book
+    const selectedBookHandler = clickedBook => {
+        const newBook = clickedBook
 
         if (!selectedReadingList.includes(newBook)) {
             setSelectedReadingList(oldSelectedBooks => [...oldSelectedBooks, newBook])
@@ -41,12 +48,12 @@ export const BooksContextProvider = ({ children }) => {
 
     const filterBooks = useCallback(
         genre => {
-            const updatedLibrary = updateReadingList(selectedReadingList, library)
+            const updatedLists = updateReadingList(selectedReadingList, library)
 
             if (genre !== 'Todos') {
-                setFilteredBooks(updatedLibrary.filter(books => books.book.genre === genre))
+                setFilteredBooks(updatedLists.filter(books => books.book.genre === genre))
             } else {
-                setFilteredBooks(updatedLibrary)
+                setFilteredBooks(updatedLists)
             }
         },
         [selectedReadingList, library]
@@ -58,11 +65,17 @@ export const BooksContextProvider = ({ children }) => {
 
     useEffect(() => {
         filterBooks(selectedFilter)
-    }, [selectedFilter, selectedReadingList, filterBooks])
+    }, [selectedFilter, filterBooks])
 
     return (
         <BooksContext.Provider
-            value={{ filteredBooks, selectedReadingList, selectedBookHandler, filterBooks, changeFilter }}>
+            value={{
+                filteredBooks,
+                selectedReadingList,
+                selectedBookHandler,
+                filterBooks,
+                changeFilter,
+            }}>
             {children}
         </BooksContext.Provider>
     )

@@ -8,7 +8,7 @@ const BookList = () => {
     const { filteredBooks } = useContext(BooksContext)
 
     return (
-        <>
+        <div>
             <h2>Lista de Libros</h2>
             <div className='row mb-4 '>
                 <SelectFilter />
@@ -28,7 +28,7 @@ const BookList = () => {
                           />
                       ))}
             </div>
-        </>
+        </div>
     )
 }
 
